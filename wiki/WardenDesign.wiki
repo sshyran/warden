@@ -15,15 +15,17 @@ http://foo.com/path/to/my/secure/file.jpg?t=234232234%7Clkjalkj23lk4j23lk4jl23j4
 Breaking things down a bit, the token is represented by the letter t. The value of the token is:
 
 {{{
+a=US,CA
+d=FR
 allowedPaths = regex based queryString formatted paths
-encryptedText = encrypt(expirationTimestamp|allowedLocation|disallowedLocation|customQueryStringData|allowedPaths)
+encryptedText = encrypt(expirationTimestamp|a=allowedLocation&d=disallowedLocation|customQueryStringData|allowedPaths)
 t=urlEncode(expirationTimestamp|encryptedText)
 }}}
 
 So, for the above example, the data would look like this:
 
 {{{
-encryptedText = encrypt(234232234||||/path/to/my/secure/file.jpg)
+encryptedText = encrypt(234232234|||/path/to/my/secure/file.jpg)
 t=urlEncode(234232234|encryptedText)
 }}}
 
@@ -32,7 +34,7 @@ That URL and its query parameters is passed to a server which then decrypts the 
 Warden has an additional feature in that you can use a cookie to secure the entire contents of a page with only one token. For example, if you have a page with multiple images on it that need to be secure, then you can generate a token that looks like this:
 
 {{{
-encryptedText = encrypt(234232234||||/path/to/my/secure/*.jpg)
+encryptedText = encrypt(234232234|||/path/to/my/secure/*.jpg)
 }}}
 
 Assuming all your content resides on a server for which requests with the cookie will be sent, then you just place that token in a cookie called wardenToken. In other words, if you generate the cookie on .foo.com, then your content needs to live on either .foo.com or something like content.foo.com.
