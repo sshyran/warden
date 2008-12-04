@@ -14,13 +14,17 @@ http://foo.com/path/to/my/secure/file.jpg?t=234232234%7Clkjalkj23lk4j23lk4jl23j4
 
 Breaking things down a bit, the token is represented by the letter t. The value of the token is:
 
+{{{
 allowedPaths = regex based queryString formatted paths
 encryptedText = encrypt(expirationTimestamp|allowedLocation|disallowedLocation|customQueryStringData|allowedPaths)
 t=urlEncode(expirationTimestamp|encryptedText)
+}}}
 
 So, for the above example, the data would look like this:
 
+{{{
 encryptedText = encrypt(234232234||||/path/to/my/secure/file.jpg)
 t=urlEncode(234232234|encryptedText)
+}}}
 
 That URL and its query parameters is passed to a server which then decrypts the token, runs any Warden plugins passing in the allowedLocation/disallowedLocation (if they exist) and customQueryStringData and then validates the allowedPaths. If there is invalid content, Warden will return HTTP_UNAUTHORIZED.
