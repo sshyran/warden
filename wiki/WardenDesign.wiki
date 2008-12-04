@@ -28,3 +28,11 @@ t=urlEncode(234232234|encryptedText)
 }}}
 
 That URL and its query parameters is passed to a server which then decrypts the token, runs any Warden plugins passing in the allowedLocation/disallowedLocation (if they exist) and customQueryStringData and then validates the allowedPaths. If there is invalid content, Warden will return HTTP_UNAUTHORIZED.
+
+Warden has an additional feature in that you can use a cookie to secure the entire contents of a page with only one token. For example, if you have a page with multiple images on it that need to be secure, then you can generate a token that looks like this:
+
+{{{
+encryptedText = encrypt(234232234||||/path/to/my/secure/*.jpg)
+}}}
+
+Assuming all your content resides on a server for which requests with the cookie will be sent, then you just place that token in a cookie called wardenToken. In other words, if you generate the cookie on .foo.com, then your content needs to live on either .foo.com or something like content.foo.com.
